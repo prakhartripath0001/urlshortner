@@ -5,8 +5,8 @@ services:
     environment:
       MYSQL_DATABASE: url_shortener
       MYSQL_USER: url_shortener
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-change-me}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-root-me}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in infra/.env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in infra/.env}
     ports:
       - "3306:3306"
     volumes:
@@ -23,8 +23,8 @@ services:
     environment:
       DATABASE_URL: jdbc:mysql://mysql:3306/url_shortener
       DATABASE_USERNAME: url_shortener
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-change-me}
-      JWT_SECRET: ${JWT_SECRET:-replace-this-with-a-long-random-secret-value}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in infra/.env}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in infra/.env}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
     ports:
       - "8080:8080"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Graph from './Graph'
 import { dummyData } from '../../dummyData/data'
 import { useStoreContext } from '../../contextApi/ContextApi'
@@ -15,14 +15,17 @@ const DashboardLayout = () => {
     const navigate = useNavigate();
     const [shortenPopUp, setShortenPopUp] = useState(false);
 
-    // console.log(useFetchTotalClicks(token, onError));
+    const {isPending, isError: urlsFailed, data: myShortenUrls, refetch } = useFetchMyShortUrls(token)
+    const {isPending: loader, isError: clicksFailed, data: totalClicks} = useFetchTotalClicks(token)
 
-    const {isLoading, data: myShortenUrls, refetch } = useFetchMyShortUrls(token, onError)
-    
-    const {isLoading: loader, data: totalClicks} = useFetchTotalClicks(token, onError)
+    useEffect(() => {
+      if (urlsFailed || clicksFailed) {
+        navigate("/error");
+      }
+    }, [urlsFailed, clicksFailed, navigate]);
 
-    function onError() {
-      navigate("/error");
+    if (urlsFailed || clicksFailed) {
+      return null;
     }
 
   return (
@@ -54,7 +57,7 @@ const DashboardLayout = () => {
             </div>
 
             <div>
-              {!isLoading && myShortenUrls.length === 0 ? (
+              {!isPending && myShortenUrls.length === 0 ? (
                 <div className="flex justify-center pt-16">
                   <div className="flex gap-2 items-center justify-center  py-6 sm:px-8 px-5 rounded-md   shadow-lg  bg-gray-50">
                     <h1 className="text-slate-800 font-montserrat   sm:text-[18px] text-[14px] font-semibold mb-1 ">

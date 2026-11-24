@@ -5,41 +5,28 @@ A full-stack URL shortener with a React dashboard and a Spring Boot API. Users c
 ## Repository layout
 
 - `client/` — React 18 frontend built with Vite, React Router, and Tailwind CSS.
-- `server/` — Spring Boot 3.4 REST API using Spring Security, JWT, Spring Data JPA, and PostgreSQL.
+- `server/` — Spring Boot 3.5 REST API using Spring Security, JWT, Spring Data JPA, and MySQL.
 
 ## Requirements
 
 - Java 23
-- Node.js and npm
-- PostgreSQL
+- Node.js 20 or newer and npm
+- Docker Compose
 
-## Configure the backend
+## Run the backend and MySQL
 
-The backend reads its database, JWT, and frontend settings from environment variables. Create a PostgreSQL database, then set:
-
-| Variable | Description |
-| --- | --- |
-| `DATABASE_URL` | JDBC connection URL, such as `jdbc:postgresql://localhost:5432/url_shortener` |
-| `DATABASE_USERNAME` | PostgreSQL username |
-| `DATABASE_PASSWORD` | PostgreSQL password |
-| `DATABASE_DIALECT` | Hibernate dialect, usually `org.hibernate.dialect.PostgreSQLDialect` |
-| `JWT_SECRET` | Secret key used to sign JWTs; provide a sufficiently long, private value |
-| `FRONTEND_URL` | Frontend origin allowed by the backend CORS configuration, e.g. `http://localhost:5173` |
-
-Start the API from the repository root:
+Docker Compose starts MySQL and the Spring Boot API. From the repository root, run:
 
 ```sh
-cd server
-export DATABASE_URL='jdbc:postgresql://localhost:5432/url_shortener'
-export DATABASE_USERNAME='postgres'
-export DATABASE_PASSWORD='your-password'
-export DATABASE_DIALECT='org.hibernate.dialect.PostgreSQLDialect'
-export JWT_SECRET='replace-with-a-long-random-secret'
-export FRONTEND_URL='http://localhost:5173'
-./mvnw spring-boot:run
+cd infra
+cp .env.example .env
+# Edit .env and set strong values for DATABASE_PASSWORD, MYSQL_ROOT_PASSWORD, and JWT_SECRET.
+docker compose up --build
 ```
 
-The API runs on port `8080` by default. Hibernate is configured with `ddl-auto=update`, so it updates the schema at startup.
+The API is available at `http://localhost:8080`; MySQL is published on port `3306`. Compose stores database files in the `mysql_data` volume.
+
+To run the backend outside Docker, start a MySQL database and set `DATABASE_URL` (for example, `jdbc:mysql://localhost:3306/url_shortener`), `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `JWT_SECRET`, and `FRONTEND_URL`, then run `./mvnw spring-boot:run` from `server/`.
 
 ## Configure and run the frontend
 
