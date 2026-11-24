@@ -15,28 +15,19 @@ A full-stack URL shortener with a React dashboard and a Spring Boot API. Users c
 
 ## Run the backend and MySQL
 
-Docker Compose starts MySQL and the Spring Boot API. From the repository root, run:
+Docker Compose starts MySQL and the Spring Boot API with local development settings. From the repository root, run:
 
 ```sh
-cd infra
-cp .env.example .env
-# Edit .env and set strong values for DATABASE_PASSWORD, MYSQL_ROOT_PASSWORD, and JWT_SECRET.
-docker compose up --build
+docker compose -f infra/compose.yaml up --build
 ```
 
 The API is available at `http://localhost:8080`; MySQL is published on port `3306`. Compose stores database files in the `mysql_data` volume.
 
-To run the backend outside Docker, start a MySQL database and set `DATABASE_URL` (for example, `jdbc:mysql://localhost:3306/url_shortener`), `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `JWT_SECRET`, and `FRONTEND_URL`, then run `./mvnw spring-boot:run` from `server/`.
+To run the backend outside Docker, start MySQL locally with database `url_shortener` and user `url_shortener` (password `localdevpass`), then run `./mvnw spring-boot:run` from `server/`.
 
 ## Configure and run the frontend
 
-Set `VITE_BACKEND_URL` to the backend origin. For local development, create `client/.env.local`:
-
-```dotenv
-VITE_BACKEND_URL=http://localhost:8080
-```
-
-Then run:
+The checked-in `client/.env` already points the frontend at `http://localhost:8080`. Run:
 
 ```sh
 cd client
