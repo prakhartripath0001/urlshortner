@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: url-shortener-mysql
+    environment:
+      MYSQL_DATABASE: url_shortener
+      MYSQL_USER: url_shortener
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-change-me}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-root-me}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  server:
+    build:
+      context: ../server
+    environment:
+      DATABASE_URL: jdbc:mysql://mysql:3306/url_shortener
+      DATABASE_USERNAME: url_shortener
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-change-me}
+      JWT_SECRET: ${JWT_SECRET:-replace-this-with-a-long-random-secret-value}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:

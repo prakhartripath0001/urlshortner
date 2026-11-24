@@ -4,8 +4,8 @@ A full-stack URL shortener with a React dashboard and a Spring Boot API. Users c
 
 ## Repository layout
 
-- `url-shortener-react/` — React 18 frontend built with Vite, React Router, and Tailwind CSS.
-- `url-shortener-sb/` — Spring Boot 3.4 REST API using Spring Security, JWT, Spring Data JPA, and PostgreSQL.
+- `client/` — React 18 frontend built with Vite, React Router, and Tailwind CSS.
+- `server/` — Spring Boot 3.4 REST API using Spring Security, JWT, Spring Data JPA, and PostgreSQL.
 
 ## Requirements
 
@@ -29,7 +29,7 @@ The backend reads its database, JWT, and frontend settings from environment vari
 Start the API from the repository root:
 
 ```sh
-cd url-shortener-sb
+cd server
 export DATABASE_URL='jdbc:postgresql://localhost:5432/url_shortener'
 export DATABASE_USERNAME='postgres'
 export DATABASE_PASSWORD='your-password'
@@ -43,7 +43,7 @@ The API runs on port `8080` by default. Hibernate is configured with `ddl-auto=u
 
 ## Configure and run the frontend
 
-Set `VITE_BACKEND_URL` to the backend origin. For local development, create `url-shortener-react/.env.local`:
+Set `VITE_BACKEND_URL` to the backend origin. For local development, create `client/.env.local`:
 
 ```dotenv
 VITE_BACKEND_URL=http://localhost:8080
@@ -52,12 +52,12 @@ VITE_BACKEND_URL=http://localhost:8080
 Then run:
 
 ```sh
-cd url-shortener-react
+cd client
 npm install
 npm run dev
 ```
 
-Vite prints the local development URL when it starts. To create a production build, run `npm run build` from `url-shortener-react/`.
+Vite prints the local development URL when it starts. To create a production build, run `npm run build` from `client/`.
 
 ## Features
 
